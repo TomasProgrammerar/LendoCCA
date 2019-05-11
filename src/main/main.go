@@ -19,6 +19,8 @@ var colorMatrix, _ = cca.GenerateMatrix(screenWidth, screenHeight, cca.RgbPallet
 var drawImage *image.RGBA
 
 func update(screen *ebiten.Image) error {
+	colorMatrix = cca.UpdateMatrix(colorMatrix, cca.RgbPallet)
+
 	for r := range colorMatrix {
 		for c := range colorMatrix[0] {
 			RgbColor, err := cca.LookupColor(colorMatrix[r][c], cca.RgbPallet)

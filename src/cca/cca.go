@@ -44,6 +44,43 @@ func newMatrix(width, height int) [][]int {
 	return colorMatrix
 }
 
+//make sure we are inbounds
+func checkOob(r, c, rOffset, cOffset, rDim, cDim int) bool {
+	return r+rOffset < 0 ||
+		r+rOffset >= rDim ||
+		c+cOffset < 0 ||
+		c+cOffset >= cDim
+}
+
+//Checks all pixels around the current to see if it should be incremented
+func checkAdjecency(r, c int, colorMatrix [][]int) bool {
+	if !checkOob(r, c, -1, 0, len(colorMatrix), len(colorMatrix[0])) {
+		if shouldIncrement(colorMatrix[r][c], colorMatrix[r-1][c]) {
+			return true
+		}
+	}
+	if !checkOob(r, c, 1, 0, len(colorMatrix), len(colorMatrix[0])) {
+		if shouldIncrement(colorMatrix[r][c], colorMatrix[r+1][c]) {
+			return true
+		}
+	}
+	if !checkOob(r, c, 0, 1, len(colorMatrix), len(colorMatrix[0])) {
+		if shouldIncrement(colorMatrix[r][c], colorMatrix[r][c+1]) {
+			return true
+		}
+	}
+	if !checkOob(r, c, 0, -1, len(colorMatrix), len(colorMatrix[0])) {
+		if shouldIncrement(colorMatrix[r][c], colorMatrix[r][c-1]) {
+			return true
+		}
+	}
+	return false
+}
+
+func shouldIncrement(c1, c2 int) bool {
+	return c1+1 == c2 || (c1 == 15 && c2 == 0)
+}
+
 //LookupColor takes an matrix index and a pallet and returns the color corresponding to the index
 func LookupColor(colorIndex int, pallet []color) (color, error) {
 	if colorIndex > len(pallet)-1 || colorIndex < 0 {
@@ -81,13 +118,15 @@ func GenerateMatrix(width, height int, pallet []color) ([][]int, error) {
 }
 
 func UpdateMatrix(colorMatrix [][]int, pallet []color) [][]int {
-	updatedMatrix := newMatrix(len(colorMatrix), len(colorMatrix[0]))
+	updatedMatrix := newMatrix(len(colorMatrix[0]), len(colorMatrix))
 	var err error
 
 	for r := range colorMatrix {
 		for c := range colorMatrix[0] {
-			if updatedMatrix[r][c], err = UpdateColor(colorMatrix[r][c], len(pallet)); err != nil {
-				log.Fatal(err)
+			if checkAdjecency(r, c, colorMatrix) {
+				if updatedMatrix[r][c], err = UpdateColor(colorMatrix[r][c], len(pallet)); err != nil {
+					log.Fatal(err)
+				}
 			}
 		}
 	}

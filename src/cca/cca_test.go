@@ -66,16 +66,17 @@ func TestGenerateMatrix(t *testing.T) {
 
 func TestMatrixUpdate(t *testing.T) {
 	testMatrix := [][]int{
-		{0, 7},
+		{0, 0},
 		{1, 15},
 	}
 
 	testMatrix = UpdateMatrix(testMatrix, RgbPallet)
 
 	if testMatrix[0][0] != 1 ||
-		testMatrix[0][1] != 8 ||
-		testMatrix[1][0] != 2 ||
+		testMatrix[0][1] != 0 ||
+		testMatrix[1][0] != 0 ||
 		testMatrix[1][1] != 0 {
-		t.Errorf("Failed to update matrix.\nExpected: [[1,8],[2,0]]\nGot:%v", testMatrix)
+		t.Errorf("Failed to update matrix.\nExpected: [[1,0],[1,0]]\nGot:%v", testMatrix)
 	}
+
 }
