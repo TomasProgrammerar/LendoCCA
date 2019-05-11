@@ -19,9 +19,11 @@ var colorMatrix, _ = cca.GenerateMatrix(screenWidth, screenHeight, cca.RgbPallet
 var drawImage *image.RGBA
 
 func update(screen *ebiten.Image) error {
+	colorMatrix = cca.UpdateMatrix(colorMatrix, cca.RgbPallet)
+
 	for r := range colorMatrix {
 		for c := range colorMatrix[0] {
-			RgbColor, err := cca.LookupColor(colorMatrix[r][c], cca.RgbPallet)
+			RgbColor, err := cca.LookupColor(colorMatrix[r][c].Value, cca.RgbPallet)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -43,6 +45,7 @@ func update(screen *ebiten.Image) error {
 }
 
 func main() {
+	ebiten.SetMaxTPS(10)
 	drawImage = image.NewRGBA(image.Rect(0, 0, screenWidth, screenHeight))
 	if err := ebiten.Run(update, screenWidth, screenHeight, 2, "CCA"); err != nil {
 		log.Fatal(err)

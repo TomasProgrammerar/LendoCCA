@@ -20,7 +20,7 @@ func TestLookupColor(t *testing.T) {
 	}
 
 	//Sanity check
-	for colorIndex := 0; colorIndex < 16; colorIndex++ {
+	for colorIndex := 0; colorIndex < len(RgbPallet)-1; colorIndex++ {
 		if lookedUpColor, err := LookupColor(colorIndex, RgbPallet); err != nil || !matchColor(lookedUpColor, RgbPallet[colorIndex]) {
 			t.Errorf("lookup of index %d failed.\nExpected: %v\n Got: %s", colorIndex, RgbPallet[colorIndex], err)
 		}
@@ -57,9 +57,34 @@ func TestGenerateMatrix(t *testing.T) {
 
 	for r := range testMatrix {
 		for c := range testMatrix[0] {
-			if testMatrix[r][c] > len(RgbPallet)-1 || testMatrix[r][c] < 0 {
-				t.Errorf("Erroneous matrix value found.\nExpected: %d > value >= 0\nGot: [%d][%d]=%d", len(RgbPallet)-1, r, c, testMatrix[r][c])
+			if testMatrix[r][c].Value > len(RgbPallet)-1 || testMatrix[r][c].Value < 0 {
+				t.Errorf("Erroneous matrix value found.\nExpected: %d > value >= 0\nGot: [%d][%d]=%d", len(RgbPallet)-1, r, c, testMatrix[r][c].Value)
 			}
 		}
+	}
+}
+
+func TestMatrixUpdate(t *testing.T) {
+	testMatrix := [][]Pixel{
+		{Pixel{0, false}, Pixel{0, false}},
+		{Pixel{1, false}, Pixel{15, false}},
+	}
+
+	testMatrix = UpdateMatrix(testMatrix, RgbPallet)
+
+	if testMatrix[0][0].Value != 1 ||
+		testMatrix[0][1].Value != 1 ||
+		testMatrix[1][0].Value != 1 ||
+		testMatrix[1][1].Value != 0 {
+		t.Errorf("Failed to update matrix.\nExpected: [[1,1],[1,0]]\nGot:%v", testMatrix)
+	}
+
+	testMatrix = UpdateMatrix(testMatrix, RgbPallet)
+
+	if testMatrix[0][0].Value != 1 ||
+		testMatrix[0][1].Value != 1 ||
+		testMatrix[1][0].Value != 1 ||
+		testMatrix[1][1].Value != 1 {
+		t.Errorf("Failed to update matrix.\nExpected: [[1,1],[1,1]]\nGot:%v", testMatrix)
 	}
 }
