@@ -14,6 +14,13 @@ type color struct {
 	B uint8
 }
 
+//Pixel represents one pixel in the matrix
+type Pixel struct {
+	Value int
+	//Keep track of whether the pixel should be upgraded to the next color
+	Upgrade bool
+}
+
 //RgbPallet is the color lookup table to deduce what colors the
 //matrix indexes correspond to
 //table taken from https://www.december.com/html/spec/color16codes.html
@@ -36,10 +43,10 @@ var RgbPallet = []color{
 	color{255, 0, 255},   //magenta
 }
 
-func newMatrix(width, height int) [][]int {
-	colorMatrix := make([][]int, height)
+func newMatrix(width, height int) [][]Pixel {
+	colorMatrix := make([][]Pixel, height)
 	for r := range colorMatrix {
-		colorMatrix[r] = make([]int, width)
+		colorMatrix[r] = make([]Pixel, width)
 	}
 	return colorMatrix
 }
@@ -53,24 +60,24 @@ func checkOob(r, c, rOffset, cOffset, rDim, cDim int) bool {
 }
 
 //Checks all pixels around the current to see if it should be incremented
-func checkAdjecency(r, c int, colorMatrix [][]int) bool {
+func checkAdjecency(r, c int, colorMatrix [][]Pixel) bool {
 	if !checkOob(r, c, -1, 0, len(colorMatrix), len(colorMatrix[0])) {
-		if shouldIncrement(colorMatrix[r][c], colorMatrix[r-1][c]) {
+		if shouldIncrement(colorMatrix[r][c].Value, colorMatrix[r-1][c].Value) {
 			return true
 		}
 	}
 	if !checkOob(r, c, 1, 0, len(colorMatrix), len(colorMatrix[0])) {
-		if shouldIncrement(colorMatrix[r][c], colorMatrix[r+1][c]) {
+		if shouldIncrement(colorMatrix[r][c].Value, colorMatrix[r+1][c].Value) {
 			return true
 		}
 	}
 	if !checkOob(r, c, 0, 1, len(colorMatrix), len(colorMatrix[0])) {
-		if shouldIncrement(colorMatrix[r][c], colorMatrix[r][c+1]) {
+		if shouldIncrement(colorMatrix[r][c].Value, colorMatrix[r][c+1].Value) {
 			return true
 		}
 	}
 	if !checkOob(r, c, 0, -1, len(colorMatrix), len(colorMatrix[0])) {
-		if shouldIncrement(colorMatrix[r][c], colorMatrix[r][c-1]) {
+		if shouldIncrement(colorMatrix[r][c].Value, colorMatrix[r][c-1].Value) {
 			return true
 		}
 	}
@@ -102,7 +109,7 @@ func UpdateColor(colorIndex, maxColors int) (int, error) {
 }
 
 //GenerateMatrix creates a widthxheight	matrix index values within the provided color pallet
-func GenerateMatrix(width, height int, pallet []color) ([][]int, error) {
+func GenerateMatrix(width, height int, pallet []color) ([][]Pixel, error) {
 	colorMatrix := newMatrix(width, height)
 
 	source := rand.NewSource(time.Now().UnixNano())
@@ -110,21 +117,29 @@ func GenerateMatrix(width, height int, pallet []color) ([][]int, error) {
 
 	for r := range colorMatrix {
 		for c := range colorMatrix[0] {
-			colorMatrix[r][c] = colorGen.Intn(len(pallet))
+			colorMatrix[r][c].Value = colorGen.Intn(len(pallet))
 		}
 	}
 
 	return colorMatrix, nil
 }
 
-func UpdateMatrix(colorMatrix [][]int, pallet []color) [][]int {
+func UpdateMatrix(colorMatrix [][]Pixel, pallet []color) [][]Pixel {
 	updatedMatrix := newMatrix(len(colorMatrix[0]), len(colorMatrix))
 	var err error
 
 	for r := range colorMatrix {
 		for c := range colorMatrix[0] {
 			if checkAdjecency(r, c, colorMatrix) {
-				if updatedMatrix[r][c], err = UpdateColor(colorMatrix[r][c], len(pallet)); err != nil {
+				updatedMatrix[r][c].Upgrade = true
+			}
+		}
+	}
+
+	for r := range colorMatrix {
+		for c := range colorMatrix[0] {
+			if updatedMatrix[r][c].Upgrade {
+				if updatedMatrix[r][c].Value, err = UpdateColor(colorMatrix[r][c].Value, len(pallet)); err != nil {
 					log.Fatal(err)
 				}
 			}

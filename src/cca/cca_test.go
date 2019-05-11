@@ -57,25 +57,25 @@ func TestGenerateMatrix(t *testing.T) {
 
 	for r := range testMatrix {
 		for c := range testMatrix[0] {
-			if testMatrix[r][c] > len(RgbPallet)-1 || testMatrix[r][c] < 0 {
-				t.Errorf("Erroneous matrix value found.\nExpected: %d > value >= 0\nGot: [%d][%d]=%d", len(RgbPallet)-1, r, c, testMatrix[r][c])
+			if testMatrix[r][c].Value > len(RgbPallet)-1 || testMatrix[r][c].Value < 0 {
+				t.Errorf("Erroneous matrix value found.\nExpected: %d > value >= 0\nGot: [%d][%d]=%d", len(RgbPallet)-1, r, c, testMatrix[r][c].Value)
 			}
 		}
 	}
 }
 
 func TestMatrixUpdate(t *testing.T) {
-	testMatrix := [][]int{
-		{0, 0},
-		{1, 15},
+	testMatrix := [][]Pixel{
+		{Pixel{0, false}, Pixel{0, false}},
+		{Pixel{1, false}, Pixel{15, false}},
 	}
 
 	testMatrix = UpdateMatrix(testMatrix, RgbPallet)
 
-	if testMatrix[0][0] != 1 ||
-		testMatrix[0][1] != 0 ||
-		testMatrix[1][0] != 0 ||
-		testMatrix[1][1] != 0 {
+	if testMatrix[0][0].Value != 1 ||
+		testMatrix[0][1].Value != 0 ||
+		testMatrix[1][0].Value != 0 ||
+		testMatrix[1][1].Value != 0 {
 		t.Errorf("Failed to update matrix.\nExpected: [[1,0],[1,0]]\nGot:%v", testMatrix)
 	}
 

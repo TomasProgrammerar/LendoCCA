@@ -23,7 +23,7 @@ func update(screen *ebiten.Image) error {
 
 	for r := range colorMatrix {
 		for c := range colorMatrix[0] {
-			RgbColor, err := cca.LookupColor(colorMatrix[r][c], cca.RgbPallet)
+			RgbColor, err := cca.LookupColor(colorMatrix[r][c].Value, cca.RgbPallet)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -45,6 +45,7 @@ func update(screen *ebiten.Image) error {
 }
 
 func main() {
+	ebiten.SetMaxTPS(15)
 	drawImage = image.NewRGBA(image.Rect(0, 0, screenWidth, screenHeight))
 	if err := ebiten.Run(update, screenWidth, screenHeight, 2, "CCA"); err != nil {
 		log.Fatal(err)
