@@ -8,9 +8,9 @@ import (
 
 //Represents a standard RGB color value
 type color struct {
-	R int
-	G int
-	B int
+	R uint8
+	G uint8
+	B uint8
 }
 
 //RgbPallet is the color lookup table to deduce what colors the

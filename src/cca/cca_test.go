@@ -49,14 +49,14 @@ func TestUpdateColor(t *testing.T) {
 }
 
 func TestGenerateMatrix(t *testing.T) {
-	testMatrix, err := GenerateMatrix(1000, 1000, RgbPallet)
+	testMatrix, err := GenerateMatrix(1000, 500, RgbPallet)
 
-	if len(testMatrix) != 1000 || len(testMatrix[0]) != 1000 || err != nil {
-		t.Errorf("Wrong matrix dimensions .\nExpected: 1000x1000\n Got: %dx%d Error: %s", len(testMatrix), len(testMatrix[0]), err)
+	if len(testMatrix[0]) != 1000 || len(testMatrix) != 500 || err != nil {
+		t.Errorf("Wrong matrix dimensions .\nExpected: 1000x500\n Got: %dx%d Error: %s", len(testMatrix), len(testMatrix[0]), err)
 	}
 
-	for c := range testMatrix[0] {
-		for r := range testMatrix {
+	for r := range testMatrix {
+		for c := range testMatrix[0] {
 			if testMatrix[r][c] > len(RgbPallet)-1 || testMatrix[r][c] < 0 {
 				t.Errorf("Erroneous matrix value found.\nExpected: %d > value >= 0\nGot: [%d][%d]=%d", len(RgbPallet)-1, r, c, testMatrix[r][c])
 			}
