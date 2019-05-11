@@ -1,5 +1,9 @@
 package cca
 
+import (
+	"errors"
+)
+
 type color struct {
 	R int
 	G int
@@ -28,7 +32,9 @@ var rgbPallet = []color{
 }
 
 func lookupColor(colorIndex int, pallet []color) (color, error) {
-	
+	if colorIndex > len(pallet)-1 || colorIndex < 0 {
+		return color{}, errors.New("Invalid color index range")
+	}
 
-	return color{}, nil
+	return pallet[colorIndex], nil
 }
