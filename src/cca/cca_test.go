@@ -57,7 +57,7 @@ func TestGenerateMatrix(t *testing.T) {
 
 	for r := range testMatrix {
 		for c := range testMatrix[0] {
-			if testMatrix[r][c] > uint8(len(RgbPallet)-1) || testMatrix[r][c] < 0 {
+			if testMatrix[r][c] > len(RgbPallet)-1 || testMatrix[r][c] < 0 {
 				t.Errorf("Erroneous matrix value found.\nExpected: %d > value >= 0\nGot: [%d][%d]=%d", len(RgbPallet)-1, r, c, testMatrix[r][c])
 			}
 		}
@@ -65,7 +65,7 @@ func TestGenerateMatrix(t *testing.T) {
 }
 
 func TestMatrixUpdate(t *testing.T) {
-	testMatrix := [][]uint8{
+	testMatrix := [][]int{
 		{0, 7},
 		{1, 15},
 	}

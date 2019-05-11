@@ -2,6 +2,7 @@ package cca
 
 import (
 	"errors"
+	"log"
 	"math/rand"
 	"time"
 )
@@ -35,6 +36,14 @@ var RgbPallet = []color{
 	color{255, 0, 255},   //magenta
 }
 
+func newMatrix(width, height int) [][]int {
+	colorMatrix := make([][]int, height)
+	for r := range colorMatrix {
+		colorMatrix[r] = make([]int, width)
+	}
+	return colorMatrix
+}
+
 //LookupColor takes an matrix index and a pallet and returns the color corresponding to the index
 func LookupColor(colorIndex int, pallet []color) (color, error) {
 	if colorIndex > len(pallet)-1 || colorIndex < 0 {
@@ -47,7 +56,7 @@ func LookupColor(colorIndex int, pallet []color) (color, error) {
 //UpdateColor takes a matrix index and updates it to the next logical step
 func UpdateColor(colorIndex, maxColors int) (int, error) {
 	if colorIndex > maxColors-1 || colorIndex < 0 {
-		return -1, errors.New("Invalid color index range")
+		return 0, errors.New("Invalid color index range")
 	} else if colorIndex == maxColors-1 {
 		return 0, nil
 	}
@@ -56,24 +65,32 @@ func UpdateColor(colorIndex, maxColors int) (int, error) {
 }
 
 //GenerateMatrix creates a widthxheight	matrix index values within the provided color pallet
-func GenerateMatrix(width, height int, pallet []color) ([][]uint8, error) {
-	colorMatrix := make([][]uint8, height)
-	for r := range colorMatrix {
-		colorMatrix[r] = make([]uint8, width)
-	}
+func GenerateMatrix(width, height int, pallet []color) ([][]int, error) {
+	colorMatrix := newMatrix(width, height)
 
 	source := rand.NewSource(time.Now().UnixNano())
 	colorGen := rand.New(source)
 
 	for r := range colorMatrix {
 		for c := range colorMatrix[0] {
-			colorMatrix[r][c] = uint8(colorGen.Intn(len(pallet)))
+			colorMatrix[r][c] = colorGen.Intn(len(pallet))
 		}
 	}
 
 	return colorMatrix, nil
 }
 
-func UpdateMatrix(colorMatrix [][]uint8, pallet []color) [][]uint8 {
-	return colorMatrix
+func UpdateMatrix(colorMatrix [][]int, pallet []color) [][]int {
+	updatedMatrix := newMatrix(len(colorMatrix), len(colorMatrix[0]))
+	var err error
+
+	for r := range colorMatrix {
+		for c := range colorMatrix[0] {
+			if updatedMatrix[r][c], err = UpdateColor(colorMatrix[r][c], len(pallet)); err != nil {
+				log.Fatal(err)
+			}
+		}
+	}
+
+	return updatedMatrix
 }
