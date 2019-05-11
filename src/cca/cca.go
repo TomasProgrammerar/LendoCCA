@@ -48,3 +48,7 @@ func updateColor(colorIndex, maxColors int) (int, error) {
 
 	return colorIndex + 1, nil
 }
+
+func generateMatrix(width, height int, pallet []color) ([][]int, error) {
+	return [][]int{}, nil
+}
