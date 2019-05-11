@@ -56,20 +56,24 @@ func UpdateColor(colorIndex, maxColors int) (int, error) {
 }
 
 //GenerateMatrix creates a widthxheight	matrix index values within the provided color pallet
-func GenerateMatrix(width, height int, pallet []color) ([][]int, error) {
-	colorMatrix := make([][]int, height)
+func GenerateMatrix(width, height int, pallet []color) ([][]uint8, error) {
+	colorMatrix := make([][]uint8, height)
 	for r := range colorMatrix {
-		colorMatrix[r] = make([]int, width)
+		colorMatrix[r] = make([]uint8, width)
 	}
 
 	source := rand.NewSource(time.Now().UnixNano())
 	colorGen := rand.New(source)
 
-	for c := range colorMatrix[0] {
-		for r := range colorMatrix {
-			colorMatrix[r][c] = colorGen.Intn(len(pallet))
+	for r := range colorMatrix {
+		for c := range colorMatrix[0] {
+			colorMatrix[r][c] = uint8(colorGen.Intn(len(pallet)))
 		}
 	}
 
 	return colorMatrix, nil
+}
+
+func UpdateMatrix(colorMatrix [][]uint8, pallet []color) [][]uint8 {
+	return colorMatrix
 }
