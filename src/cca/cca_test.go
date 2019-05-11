@@ -20,7 +20,7 @@ func TestLookupColor(t *testing.T) {
 	}
 
 	//Sanity check
-	for colorIndex := 0; colorIndex < 16; colorIndex++ {
+	for colorIndex := 0; colorIndex < len(RgbPallet)-1; colorIndex++ {
 		if lookedUpColor, err := LookupColor(colorIndex, RgbPallet); err != nil || !matchColor(lookedUpColor, RgbPallet[colorIndex]) {
 			t.Errorf("lookup of index %d failed.\nExpected: %v\n Got: %s", colorIndex, RgbPallet[colorIndex], err)
 		}
@@ -73,10 +73,18 @@ func TestMatrixUpdate(t *testing.T) {
 	testMatrix = UpdateMatrix(testMatrix, RgbPallet)
 
 	if testMatrix[0][0].Value != 1 ||
-		testMatrix[0][1].Value != 0 ||
-		testMatrix[1][0].Value != 0 ||
+		testMatrix[0][1].Value != 1 ||
+		testMatrix[1][0].Value != 1 ||
 		testMatrix[1][1].Value != 0 {
-		t.Errorf("Failed to update matrix.\nExpected: [[1,0],[1,0]]\nGot:%v", testMatrix)
+		t.Errorf("Failed to update matrix.\nExpected: [[1,1],[1,0]]\nGot:%v", testMatrix)
 	}
 
+	testMatrix = UpdateMatrix(testMatrix, RgbPallet)
+
+	if testMatrix[0][0].Value != 1 ||
+		testMatrix[0][1].Value != 1 ||
+		testMatrix[1][0].Value != 1 ||
+		testMatrix[1][1].Value != 1 {
+		t.Errorf("Failed to update matrix.\nExpected: [[1,1],[1,1]]\nGot:%v", testMatrix)
+	}
 }

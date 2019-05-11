@@ -21,6 +21,10 @@ type Pixel struct {
 	Upgrade bool
 }
 
+const (
+	threshold = 1
+)
+
 //RgbPallet is the color lookup table to deduce what colors the
 //matrix indexes correspond to
 //table taken from https://www.december.com/html/spec/color16codes.html
@@ -61,27 +65,19 @@ func checkOob(r, c, rOffset, cOffset, rDim, cDim int) bool {
 
 //Checks all pixels around the current to see if it should be incremented
 func checkAdjecency(r, c int, colorMatrix [][]Pixel) bool {
-	if !checkOob(r, c, -1, 0, len(colorMatrix), len(colorMatrix[0])) {
-		if shouldIncrement(colorMatrix[r][c].Value, colorMatrix[r-1][c].Value) {
-			return true
+	totalNeighbours := 0
+	dirs := []int{-1, 0, 1}
+
+	for _, rOffset := range dirs {
+		for _, cOffset := range dirs {
+			if !checkOob(r, c, rOffset, cOffset, len(colorMatrix), len(colorMatrix[0])) {
+				if shouldIncrement(colorMatrix[r][c].Value, colorMatrix[r+rOffset][c+cOffset].Value) {
+					totalNeighbours++
+				}
+			}
 		}
 	}
-	if !checkOob(r, c, 1, 0, len(colorMatrix), len(colorMatrix[0])) {
-		if shouldIncrement(colorMatrix[r][c].Value, colorMatrix[r+1][c].Value) {
-			return true
-		}
-	}
-	if !checkOob(r, c, 0, 1, len(colorMatrix), len(colorMatrix[0])) {
-		if shouldIncrement(colorMatrix[r][c].Value, colorMatrix[r][c+1].Value) {
-			return true
-		}
-	}
-	if !checkOob(r, c, 0, -1, len(colorMatrix), len(colorMatrix[0])) {
-		if shouldIncrement(colorMatrix[r][c].Value, colorMatrix[r][c-1].Value) {
-			return true
-		}
-	}
-	return false
+	return totalNeighbours >= threshold
 }
 
 func shouldIncrement(c1, c2 int) bool {
@@ -125,26 +121,26 @@ func GenerateMatrix(width, height int, pallet []color) ([][]Pixel, error) {
 }
 
 func UpdateMatrix(colorMatrix [][]Pixel, pallet []color) [][]Pixel {
-	updatedMatrix := newMatrix(len(colorMatrix[0]), len(colorMatrix))
 	var err error
 
 	for r := range colorMatrix {
 		for c := range colorMatrix[0] {
 			if checkAdjecency(r, c, colorMatrix) {
-				updatedMatrix[r][c].Upgrade = true
+				colorMatrix[r][c].Upgrade = true
 			}
 		}
 	}
 
 	for r := range colorMatrix {
 		for c := range colorMatrix[0] {
-			if updatedMatrix[r][c].Upgrade {
-				if updatedMatrix[r][c].Value, err = UpdateColor(colorMatrix[r][c].Value, len(pallet)); err != nil {
+			if colorMatrix[r][c].Upgrade {
+				colorMatrix[r][c].Upgrade = false
+				if colorMatrix[r][c].Value, err = UpdateColor(colorMatrix[r][c].Value, len(pallet)); err != nil {
 					log.Fatal(err)
 				}
 			}
 		}
 	}
 
-	return updatedMatrix
+	return colorMatrix
 }

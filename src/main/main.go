@@ -45,7 +45,7 @@ func update(screen *ebiten.Image) error {
 }
 
 func main() {
-	ebiten.SetMaxTPS(15)
+	ebiten.SetMaxTPS(10)
 	drawImage = image.NewRGBA(image.Rect(0, 0, screenWidth, screenHeight))
 	if err := ebiten.Run(update, screenWidth, screenHeight, 2, "CCA"); err != nil {
 		log.Fatal(err)
