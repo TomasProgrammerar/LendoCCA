@@ -47,3 +47,19 @@ func TestUpdateColor(t *testing.T) {
 		t.Errorf("update of index 0 failed.\nExpected: %v\n Got: Color: %v Error: %s", 1, updatedColor, err)
 	}
 }
+
+func TestGenerateMatrix(t *testing.T) {
+	testMatrix, err := generateMatrix(1000, 1000, rgbPallet)
+
+	if len(testMatrix) != 1000 || len(testMatrix[0]) != 1000 || err != nil {
+		t.Errorf("Wrong matrix dimensions .\nExpected: 1000x1000\n Got: %dx%d Error: %s", len(testMatrix), len(testMatrix[0]), err)
+	}
+
+	for c := range testMatrix[0] {
+		for r := range testMatrix {
+			if testMatrix[r][c] > len(rgbPallet)-1 || testMatrix[r][c] < 0 {
+				t.Errorf("Erroneous matrix value found.\nExpected: %d > value >= 0\nGot: [%d][%d]=%d", len(rgbPallet)-1, r, c, testMatrix[r][c])
+			}
+		}
+	}
+}
