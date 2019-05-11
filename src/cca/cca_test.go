@@ -55,8 +55,8 @@ func TestGenerateMatrix(t *testing.T) {
 		t.Errorf("Wrong matrix dimensions .\nExpected: 1000x1000\n Got: %dx%d Error: %s", len(testMatrix), len(testMatrix[0]), err)
 	}
 
-	for c := 0; c < len(testMatrix[0]); c++ {
-		for r := 0; r < len(testMatrix); r++ {
+	for c := range testMatrix[0] {
+		for r := range testMatrix {
 			if testMatrix[r][c] > len(rgbPallet)-1 || testMatrix[r][c] < 0 {
 				t.Errorf("Erroneous matrix value found.\nExpected: %d > value >= 0\nGot: [%d][%d]=%d", len(rgbPallet)-1, r, c, testMatrix[r][c])
 			}

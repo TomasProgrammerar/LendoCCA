@@ -2,6 +2,8 @@ package cca
 
 import (
 	"errors"
+	"math/rand"
+	"time"
 )
 
 type color struct {
@@ -50,5 +52,19 @@ func updateColor(colorIndex, maxColors int) (int, error) {
 }
 
 func generateMatrix(width, height int, pallet []color) ([][]int, error) {
-	return [][]int{}, nil
+	colorMatrix := make([][]int, height)
+	for r := range colorMatrix {
+		colorMatrix[r] = make([]int, width)
+	}
+
+	source := rand.NewSource(time.Now().UnixNano())
+	colorGen := rand.New(source)
+
+	for c := range colorMatrix[0] {
+		for r := range colorMatrix {
+			colorMatrix[r][c] = colorGen.Intn(len(pallet))
+		}
+	}
+
+	return colorMatrix, nil
 }
