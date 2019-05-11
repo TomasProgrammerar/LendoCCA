@@ -38,3 +38,13 @@ func lookupColor(colorIndex int, pallet []color) (color, error) {
 
 	return pallet[colorIndex], nil
 }
+
+func updateColor(colorIndex, maxColors int) (int, error) {
+	if colorIndex > maxColors-1 || colorIndex < 0 {
+		return -1, errors.New("Invalid color index range")
+	} else if colorIndex == maxColors-1 {
+		return 0, nil
+	}
+
+	return colorIndex + 1, nil
+}
