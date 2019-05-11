@@ -6,15 +6,17 @@ import (
 	"time"
 )
 
+//Represents a standard RGB color value
 type color struct {
 	R int
 	G int
 	B int
 }
 
-//Color table taken from
-//https://www.december.com/html/spec/color16codes.html
-var rgbPallet = []color{
+//RgbPallet is the color lookup table to deduce what colors the
+//matrix indexes correspond to
+//table taken from https://www.december.com/html/spec/color16codes.html
+var RgbPallet = []color{
 	color{0, 0, 0},       //Black
 	color{128, 128, 128}, //Grey
 	color{192, 192, 192}, //Silver
@@ -33,7 +35,8 @@ var rgbPallet = []color{
 	color{255, 0, 255},   //magenta
 }
 
-func lookupColor(colorIndex int, pallet []color) (color, error) {
+//LookupColor takes an matrix index and a pallet and returns the color corresponding to the index
+func LookupColor(colorIndex int, pallet []color) (color, error) {
 	if colorIndex > len(pallet)-1 || colorIndex < 0 {
 		return color{}, errors.New("Invalid color index range")
 	}
@@ -41,7 +44,8 @@ func lookupColor(colorIndex int, pallet []color) (color, error) {
 	return pallet[colorIndex], nil
 }
 
-func updateColor(colorIndex, maxColors int) (int, error) {
+//UpdateColor takes a matrix index and updates it to the next logical step
+func UpdateColor(colorIndex, maxColors int) (int, error) {
 	if colorIndex > maxColors-1 || colorIndex < 0 {
 		return -1, errors.New("Invalid color index range")
 	} else if colorIndex == maxColors-1 {
@@ -51,7 +55,8 @@ func updateColor(colorIndex, maxColors int) (int, error) {
 	return colorIndex + 1, nil
 }
 
-func generateMatrix(width, height int, pallet []color) ([][]int, error) {
+//GenerateMatrix creates a widthxheight	matrix index values within the provided color pallet
+func GenerateMatrix(width, height int, pallet []color) ([][]int, error) {
 	colorMatrix := make([][]int, height)
 	for r := range colorMatrix {
 		colorMatrix[r] = make([]int, width)
