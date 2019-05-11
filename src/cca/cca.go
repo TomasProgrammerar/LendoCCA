@@ -38,3 +38,7 @@ func lookupColor(colorIndex int, pallet []color) (color, error) {
 
 	return pallet[colorIndex], nil
 }
+
+func updateColor(colorIndex int, pallet []color) (color, error) {
+	return color{}, nil
+}
