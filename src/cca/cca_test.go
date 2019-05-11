@@ -29,21 +29,21 @@ func TestLookupColor(t *testing.T) {
 
 func TestUpdateColor(t *testing.T) {
 	//Range
-	if updatedColor, err := updateColor(-1, rgbPallet); err == nil {
+	if updatedColor, err := updateColor(-1, len(rgbPallet)); err == nil {
 		t.Errorf("update of index -1 failed.\nExpected: Error, Invalid color range\n Got: %v", updatedColor)
 	}
 
-	if updatedColor, err := updateColor(16, rgbPallet); err == nil {
+	if updatedColor, err := updateColor(16, len(rgbPallet)); err == nil {
 		t.Errorf("update of index 16 failed.\nExpected: Error, Invalid color range\n Got: %v", updatedColor)
 	}
 
 	//Loop around
-	if updatedColor, err := updateColor(15, rgbPallet); err != nil || !matchColor(updatedColor, rgbPallet[0]) {
-		t.Errorf("update of index 15 failed.\nExpected: %v\n Got: Color: %v Error: %s", rgbPallet[0], updatedColor, err)
+	if updatedColor, err := updateColor(15, len(rgbPallet)); err != nil || updatedColor != 0 {
+		t.Errorf("update of index 15 failed.\nExpected: %v\n Got: Color: %v Error: %s", 0, updatedColor, err)
 	}
 
 	//Increment
-	if updatedColor, err := updateColor(0, rgbPallet); err != nil || !matchColor(updatedColor, rgbPallet[1]) {
-		t.Errorf("update of index 0 failed.\nExpected: %v\n Got: Color: %v Error: %s", rgbPallet[1], updatedColor, err)
+	if updatedColor, err := updateColor(0, len(rgbPallet)); err != nil || updatedColor != 1 {
+		t.Errorf("update of index 0 failed.\nExpected: %v\n Got: Color: %v Error: %s", 1, updatedColor, err)
 	}
 }
