@@ -1,12 +1,12 @@
 # [Cyclic cellular automaton!](https://en.wikipedia.org/wiki/Cyclic_cellular_automaton)
 ![](https://i.imgur.com/uzaJ57u.png)
 
+Eftersom detta är en grafisk applikation så krävs det att det finns en X11 server installerad på host-maskinen.
+Tyvärr så gör detta att applikationen inte är helt platformsoberoende trots att den körs via docker, och den har bara testats på en linuxmaskin då ingen Mac funnits tillgänglig. 
+Alla 3:e parts bibliotek som används finns dock tillgängliga för alla platformar så kör man inte docker under linux är det nog enklast att bygga och köra lokalt.
+
 ## Docker setup:
 ### Installera en X11 server
-Eftersom det är en grafisk applikation så krävs det att det finns en X11 server installerad på host-maskinen.
-Tyvärr så gör detta att applikationen inte är helt platformsoberoende trots att den körs via docker, och den har bara testats på en linuxmaskin då ingen Mac funnits tillgänglig. 
-Alla 3:e parts bibliotek som används finns dock tillgängliga för alla platformar så det enklast är nog att bygga och köra lokalt.
-
 #### Mac: 
 1. installera https://www.xquartz.org/
 2. slå på [‘Allow connections from network clients’](https://blogs.oracle.com/oraclewebcentersuite/running-gui-applications-on-native-docker-containers-for-mac)
