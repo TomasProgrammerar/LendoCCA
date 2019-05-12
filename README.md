@@ -1,4 +1,5 @@
 # [Cyclic cellular automaton!](https://en.wikipedia.org/wiki/Cyclic_cellular_automaton)
+![](https://i.imgur.com/uzaJ57u.png)
 
 ## Docker setup:
 ### Installera en X11 server
@@ -17,7 +18,7 @@ En X11 server borde finnas installerat på alla vanligare linux installationer, 
 Kör `docker build -t test .` i rotkatalogen
 
 ### Starta programmet
-Starta genoma att köra `./run_docker.sh`. Detta slussar vidare bild-output till X servern på det lokala systemet.
+Starta genoma att köra `./run_docker.sh` som super user (Krävs för X11 sockets). Detta slussar vidare bild-output till X servern på det lokala systemet.
 
 ## Bygg Lokalt:
 1. Installera [Ebiten med dependencies](https://ebiten.org/install.html) för ditt operativsystem
