@@ -3,7 +3,8 @@
 
 ## Docker setup:
 ### Installera en X11 server
-(Eftersom det är en grafisk applikation så krävs det att det finns en X11 server installerad på host-maskinen)
+Eftersom det är en grafisk applikation så krävs det att det finns en X11 server installerad på host-maskinen.
+Tyvärr så gör detta att applikationen inte är helt platformsoberoende trots att den körs via docker, och den har bara testats på en linuxmaskin då ingen Mac funnits tillgänglig. Alla 3:e parts bibliotek som används finns dock tillgängliga för alla platformar så i värsta fall så kommer det fungera att bygga och köra lokalt.
 
 #### Mac: 
 1. installera https://www.xquartz.org/
