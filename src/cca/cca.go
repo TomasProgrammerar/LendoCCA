@@ -21,9 +21,9 @@ type Pixel struct {
 	Upgrade bool
 }
 
-const (
-	threshold = 1
-)
+//Simulation parameters
+var threshold = 1
+var speed = 1
 
 //RgbPallet is the color lookup table to deduce what colors the
 //matrix indexes correspond to
@@ -45,6 +45,16 @@ var RgbPallet = []color{
 	color{0, 0, 255},     //blue
 	color{128, 0, 128},   //purple
 	color{255, 0, 255},   //magenta
+}
+
+//InitSimParams sets up the conditions used when running the simulator
+func InitSimParams(fthreshold, fspeed, fcolors int) {
+	threshold = fthreshold
+	speed = fspeed
+	if fcolors > len(RgbPallet) {
+		fcolors = len(RgbPallet)
+	}
+	RgbPallet = RgbPallet[len(RgbPallet)-fcolors:]
 }
 
 func newMatrix(width, height int) [][]Pixel {
@@ -120,6 +130,7 @@ func GenerateMatrix(width, height int, pallet []color) ([][]Pixel, error) {
 	return colorMatrix, nil
 }
 
+//UpdateMatrix checks and updates every cell in the matrix if it has enough neighbours
 func UpdateMatrix(colorMatrix [][]Pixel, pallet []color) [][]Pixel {
 	var err error
 

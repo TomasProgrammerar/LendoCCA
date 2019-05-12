@@ -2,6 +2,7 @@ package main
 
 import (
 	"cca"
+	"flag"
 	"fmt"
 	"image"
 	"log"
@@ -10,12 +11,7 @@ import (
 	"github.com/hajimehoshi/ebiten/ebitenutil"
 )
 
-const (
-	screenWidth  = 640
-	screenHeight = 480
-)
-
-var colorMatrix, _ = cca.GenerateMatrix(screenWidth, screenHeight, cca.RgbPallet)
+var colorMatrix [][]cca.Pixel
 var drawImage *image.RGBA
 
 func update(screen *ebiten.Image) error {
@@ -45,9 +41,18 @@ func update(screen *ebiten.Image) error {
 }
 
 func main() {
-	ebiten.SetMaxTPS(10)
-	drawImage = image.NewRGBA(image.Rect(0, 0, screenWidth, screenHeight))
-	if err := ebiten.Run(update, screenWidth, screenHeight, 2, "CCA"); err != nil {
+	threshold := flag.Int("threshold", 1, "required number of preceeding neighbours required before transforming")
+	speed := flag.Int("speed", 10, "number of updates per second to the simulation (cap at 60)")
+	width := flag.Int("width", 640, "screen width")
+	height := flag.Int("height", 480, "screen height")
+	colors := flag.Int("colors", 16, "total number of colors used in the simulation")
+	flag.Parse()
+
+	cca.InitSimParams(*threshold, *speed, *colors)
+	colorMatrix, _ = cca.GenerateMatrix(*width, *height, cca.RgbPallet)
+	ebiten.SetMaxTPS(*speed)
+	drawImage = image.NewRGBA(image.Rect(0, 0, *width, *height))
+	if err := ebiten.Run(update, *width, *height, 2, "CCA"); err != nil {
 		log.Fatal(err)
 	}
 }
