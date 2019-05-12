@@ -22,3 +22,18 @@ Starta genoma att köra `./run_docker.sh`. Detta slussar vidare bild-output till
 ## Bygg Lokalt:
 1. Installera [Ebiten med dependencies](https://ebiten.org/install.html) för ditt operativsystem
 2. starta applikationen genom att köra `go run /src/main/main.go` från rotkatalogen
+
+## Inställningar:
+För att få upp all tillgängliga inställningar kan man köra `go run /src/main/main.go -h`
+```
+  -colors int
+        total number of colors used in the simulation (default 16)
+  -height int
+        screen height (default 480)
+  -speed int
+        number of updates per second to the simulation (cap at 60) (default 10)
+  -threshold int
+        required number of preceeding neighbours required before transforming (default 1)
+  -width int
+        screen width (default 640)
+```
