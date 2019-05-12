@@ -25,7 +25,7 @@ Starta genoma att köra `./run_docker.sh`. Detta slussar vidare bild-output till
 
 ## Inställningar:
 För att få upp all tillgängliga inställningar kan man köra `go run /src/main/main.go -h`
-`
+```
   -colors int
         total number of colors used in the simulation (default 16)
   -height int
@@ -36,4 +36,4 @@ För att få upp all tillgängliga inställningar kan man köra `go run /src/mai
         required number of preceeding neighbours required before transforming (default 1)
   -width int
         screen width (default 640)
-`
+```
