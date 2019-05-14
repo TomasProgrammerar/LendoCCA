@@ -28,6 +28,7 @@ Starta genoma att köra `./run_docker.sh` som super user (Krävs för X11 socket
 
 ## Inställningar:
 För att få upp all tillgängliga inställningar kan man köra `go run /src/main/main.go -h`
+(eller `./run_docker.sh -h` om man kör via docker)
 ```
   -colors int
         total number of colors used in the simulation (default 16)
