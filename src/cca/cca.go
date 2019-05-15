@@ -74,14 +74,14 @@ func checkOob(r, c, rOffset, cOffset, rDim, cDim int) bool {
 }
 
 //Checks all pixels around the current to see if it should be incremented
-func checkAdjecency(r, c int, colorMatrix [][]Pixel) bool {
+func checkAdjecency(r, c int, colorMatrix [][]Pixel, pallet []color) bool {
 	totalNeighbours := 0
 	dirs := []int{-1, 0, 1}
 
 	for _, rOffset := range dirs {
 		for _, cOffset := range dirs {
 			if !checkOob(r, c, rOffset, cOffset, len(colorMatrix), len(colorMatrix[0])) {
-				if shouldIncrement(colorMatrix[r][c].Value, colorMatrix[r+rOffset][c+cOffset].Value) {
+				if shouldIncrement(colorMatrix[r][c].Value, colorMatrix[r+rOffset][c+cOffset].Value, len(pallet)-1) {
 					totalNeighbours++
 				}
 			}
@@ -90,8 +90,8 @@ func checkAdjecency(r, c int, colorMatrix [][]Pixel) bool {
 	return totalNeighbours >= threshold
 }
 
-func shouldIncrement(c1, c2 int) bool {
-	return c1+1 == c2 || (c1 == 15 && c2 == 0)
+func shouldIncrement(c1, c2, maxColor int) bool {
+	return c1+1 == c2 || (c1 == maxColor && c2 == 0)
 }
 
 //LookupColor takes an matrix index and a pallet and returns the color corresponding to the index
@@ -136,7 +136,7 @@ func UpdateMatrix(colorMatrix [][]Pixel, pallet []color) [][]Pixel {
 
 	for r := range colorMatrix {
 		for c := range colorMatrix[0] {
-			if checkAdjecency(r, c, colorMatrix) {
+			if checkAdjecency(r, c, colorMatrix, pallet) {
 				colorMatrix[r][c].Upgrade = true
 			}
 		}
